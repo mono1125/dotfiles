@@ -49,6 +49,8 @@ NeoBundle 'tpope/vim-commentary'
 NeoBundle 'goerz/jupytext.vim'
 " jupyter-vim
 NeoBundle 'jupyter-vim/jupyter-vim'
+" Directory treeを表示
+NeoBundle 'scrooloose/nerdtree'
 
 " vimのlua機能が使える時だけ以下のVimプラグインをインストールする
 if has('lua')
@@ -258,3 +260,9 @@ highlight NonText ctermbg=none
 highlight LineNr ctermbg=none
 highlight Folded ctermbg=none
 highlight EndOfBuffer ctermbg=none
+
+"----------------------------------------------------------
+" NERD Treeの表示非表示を切り替える
+"----------------------------------------------------------
+" Ctrl + nで切り替える
+map <C-n> :NERDTreeToggle<CR>
