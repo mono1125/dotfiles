@@ -36,3 +36,11 @@ depends = ['vim-airline-themes']
 # 依存関係を指定したからと言って、自動でインストールはされない（ここは NeoBundle と違う）
 [[plugins]]
 repo = 'vim-airline/vim-airline-themes'
+
+# 括弧を補完
+#[[plugins]]
+#repo = 'Townk/vim-autoclose'
+
+#閉じ括弧補完
+#[[plugins]]
+#repo = 'cohama/lexima.vim'

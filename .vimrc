@@ -53,7 +53,7 @@ filetype plugin indent on
 " パッケージもある
 "----------------------------------------------------------
 " カラースキームmolokai
-call dein#add('tomasr/molokai')
+"call dein#add('tomasr/molokai')
 " ステータスラインの表示内容強化
 call dein#add('itchyny/lightline.vim')
 " インデントの可視化
@@ -96,19 +96,46 @@ call dein#add('junegunn/vim-easy-align', {
   \   'mappings' : ['<Plug>(EasyAlign)'],
   \ }})
 
+"----------------------------------------------------------
+" 補完用設定
+"----------------------------------------------------------
 " 補完をしてくれるdeoplete
 call dein#add('Shougo/deoplete.nvim')
 if !has('nvim')
   call dein#add('roxma/nvim-yarp')
   call dein#add('roxma/vim-hug-neovim-rpc')
 endif
+
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_delay = 0
+let g:deoplete#auto_complete_start_length = 1
+let g:deoplete#enable_camel_case = 0
+let g:deoplete#enable_ignore_case = 0
+let g:deoplete#enable_refresh_always = 0
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#file#enable_buffer_path = 1
+let g:deoplete#max_list = 10000
+
+" tabキーで選択できるようにする
+inoremap <expr><tab> pumvisible() ? "\<C-n>" :
+        \ neosnippet#expandable_or_jumpable() ?
+        \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+
+" neosnippet
+call dein#add('Shougo/neosnippet.vim')
+" Ctrl + k でジャンプ
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+"neosnippet-snippets
+call dein#add('Shougo/neosnippet-snippets')
 
 "----------------------------------------------------------
 " カラースキーム
 "----------------------------------------------------------
-" call dein#add('tomasr/molokai', {'merged': 0})
-" call dein#source('molokai')
+call dein#add('tomasr/molokai', {'merged': 0})
+call dein#source('molokai')
 colorscheme molokai " カラースキームにmolokaiを設定する
 set t_Co=256 " iTerm2など既に256色環境なら無くても良い
 syntax enable " 構文に色を付ける
