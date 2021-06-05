@@ -45,6 +45,10 @@ NeoBundle 'rking/ag.vim'
 NeoBundle 'pmsorhaindo/syntastic-local-eslint.vim'
 " ビジュアルモードでまとめてコメントアウト(gcでコメントアウトされる)
 NeoBundle 'tpope/vim-commentary'
+" jupyterノートブックを扱えるようにする
+NeoBundle 'goerz/jupytext.vim'
+" jupyter-vim
+NeoBundle 'jupyter-vim/jupyter-vim'
 
 " vimのlua機能が使える時だけ以下のVimプラグインをインストールする
 if has('lua')
@@ -220,7 +224,7 @@ let g:syntastic_mode_map = { 'mode': 'passive',
                            \ 'passive_filetypes': [] }
 
 "----------------------------------------------------------
-" CtrlP
+" ctrlp
 "----------------------------------------------------------
 let g:ctrlp_match_window = 'order:ttb,min:20,max:20,results:100' " マッチウインドウの設定. 「下部に表示, 大きさ20行で固定, 検索結果100件」
 let g:ctrlp_show_hidden = 1 " .(ドット)から始まるファイルも検索対象にする
@@ -237,3 +241,20 @@ if executable('ag')
   let g:ctrlp_use_caching=0 " CtrlPのキャッシュを使わない
   let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
 endif
+
+"----------------------------------------------------------
+" Jupytext.vim向けの設定
+"----------------------------------------------------------
+" セルの区切り文字をVSCode互換の # %% に指定する
+let g:jupytext_fmt = 'py:percent'
+" vimのPython向けシンタックスハイライトを有効にする
+let g:jupytext_filetype_map = {'py': 'python'}
+
+"----------------------------------------------------------
+" 透過用の設定
+"----------------------------------------------------------
+highlight Normal ctermbg=none
+highlight NonText ctermbg=none
+highlight LineNr ctermbg=none
+highlight Folded ctermbg=none
+highlight EndOfBuffer ctermbg=none
