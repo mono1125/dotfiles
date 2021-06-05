@@ -24,9 +24,9 @@ repo = 'delphinus35/typescript-vim'
 rev  = 'colorize-template-strings'
 
 # 特定の条件で読み込みたいとき
-[[plugins]]
-repo = 'elzr/vim-json'
-if   = '''! has('kaoriya')'''
+#[[plugins]]
+#repo = 'elzr/vim-json'
+#if   = '''! has('kaoriya')'''
 
 # 依存関係を指定したいとき
 [[plugins]]
@@ -44,3 +44,49 @@ repo = 'vim-airline/vim-airline-themes'
 #閉じ括弧補完
 #[[plugins]]
 #repo = 'cohama/lexima.vim'
+
+[[plugins]]
+repo = 'elzr/vim-json'
+on_ft = ['json']
+hook_add = '''
+    let g:vim_json_syntax_conceal = 0
+    au! BufRead,BufNewFile *.json set filetype=json
+    augroup json_autocmd
+        autocmd!
+        autocmd FileType json set autoindent
+        autocmd FileType json set formatoptions=tcq2l
+        autocmd FileType json set textwidth=78 shiftwidth=2
+        autocmd FileType json set softtabstop=2 tabstop=8
+        autocmd FileType json set expandtab
+        autocmd FileType json set foldmethod=syntax
+    augroup END
+'''
+
+# Python plugins
+[[plugins]]
+repo = 'psf/black'
+on_ft = ['python']
+hook_add = '''
+    autocmd BufWritePost *.py Black
+'''
+[[plugins]]
+repo = 'nvie/vim-flake8'
+on_ft = ['python']
+hook_add = '''
+    autocmd BufWritePost *.py call Flake8()
+    let g:flake8_show_in_gutter=1
+    let g:flake8_show_in_file=1
+'''
+[[plugins]]
+repo = 'davidhalter/jedi-vim'
+on_ft = ['python']
+[[plugins]]
+repo = 'vim-scripts/syntastic'
+on_ft = ['python']
+[[plugins]]
+repo = 'soramugi/auto-ctags.vim'
+on_ft = ['python']
+hook_add = '''
+    let g:auto_ctags = 1
+    let g:auto_ctags_directory_list = ['.git', '.']
+'''
