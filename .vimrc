@@ -5,95 +5,111 @@ scriptencoding utf-8
 " Vim scritptにvimrcも含まれるので、日本語でコメントを書く場合は先頭にこの設定が必要になる
 
 "----------------------------------------------------------
-" NeoBundle
+" dein.vim
 "----------------------------------------------------------
-if has('vim_starting')
-    " 初回起動時のみruntimepathにNeoBundleのパスを指定する
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+" プラグインが実際にインストールされるディレクトリ
+let s:dein_dir = expand('~/.cache/dein')
+" dein.vim 本体
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
-    " NeoBundleが未インストールであればgit cloneする
-    if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
-        echo "install NeoBundle..."
-        :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
-    endif
+" dein.vim がなければ github から落としてくる
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  endif
+  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
 endif
 
-call neobundle#begin(expand('~/.vim/bundle/'))
+" 設定開始
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
 
-" インストールするVimプラグインを以下に記述
-" NeoBundle自身を管理
-NeoBundleFetch 'Shougo/neobundle.vim'
+  " プラグインリストを収めた TOML ファイル
+  " 予め TOML ファイル（後述）を用意しておく
+  let g:rc_dir    = expand('~/.vim/rc')
+  let s:toml      = g:rc_dir . '/dein.toml'
+  let s:lazy_toml = g:rc_dir . '/dein_lazy.toml'
+
+  " TOML を読み込み、キャッシュしておく
+  call dein#load_toml(s:toml,      {'lazy': 0})
+  call dein#load_toml(s:lazy_toml, {'lazy': 1})
+
+  " 設定終了
+  call dein#end()
+  call dein#save_state()
+endif
+
+" もし、未インストールものものがあったらインストール
+if dein#check_install()
+  call dein#install()
+endif
+
+" ファイルタイプ別のVimプラグイン/インデントを有効にする
+filetype plugin indent on
+
+"----------------------------------------------------------
+" dein.vimパッケージ.
+" ~/.vim/rc/(dein.toml|dein_lazy)にtoml形式で書いている
+" パッケージもある
+"----------------------------------------------------------
 " カラースキームmolokai
-NeoBundle 'tomasr/molokai'
+call dein#add('tomasr/molokai')
 " ステータスラインの表示内容強化
-NeoBundle 'itchyny/lightline.vim'
+call dein#add('itchyny/lightline.vim')
 " インデントの可視化
-NeoBundle 'Yggdroot/indentLine'
+call dein#add('Yggdroot/indentLine')
 " 末尾の全角半角空白文字を赤くハイライト
-NeoBundle 'bronson/vim-trailing-whitespace'
+call dein#add('bronson/vim-trailing-whitespace')
 " 構文エラーチェック
-NeoBundle 'scrooloose/syntastic'
+call dein#add('scrooloose/syntastic')
 " 多機能セレクタ
-NeoBundle 'ctrlpvim/ctrlp.vim'
+call dein#add('ctrlpvim/ctrlp.vim')
 " CtrlPの拡張プラグイン. 関数検索
-NeoBundle 'tacahiroy/ctrlp-funky'
+call dein#add('tacahiroy/ctrlp-funky')
 " CtrlPの拡張プラグイン. コマンド履歴検索
-NeoBundle 'suy/vim-ctrlp-commandline'
+call dein#add('suy/vim-ctrlp-commandline')
 " CtrlPの検索にagを使う
-NeoBundle 'rking/ag.vim'
-" プロジェクトに入ってるESLintを読み込む
-NeoBundle 'pmsorhaindo/syntastic-local-eslint.vim'
+call dein#add('rking/ag.vim')
 " ビジュアルモードでまとめてコメントアウト(gcでコメントアウトされる)
-NeoBundle 'tpope/vim-commentary'
+call dein#add('tpope/vim-commentary')
 " jupyterノートブックを扱えるようにする
-NeoBundle 'goerz/jupytext.vim'
+call dein#add('goerz/jupytext.vim')
 " jupyter-vim
-NeoBundle 'jupyter-vim/jupyter-vim'
+call dein#add('jupyter-vim/jupyter-vim')
 " Directory treeを表示
-NeoBundle 'scrooloose/nerdtree'
+call dein#add('scrooloose/nerdtree')
 " Vimproc
-NeoBundle 'Shougo/vimproc', {
+call dein#add('Shougo/vimproc', {
   \ 'build' : {
   \     'windows' : 'make -f make_mingw32.mak',
   \     'cygwin' : 'make -f make_cygwin.mak',
   \     'mac' : 'make -f make_mac.mak',
   \     'unix' : 'make -f make_unix.mak',
   \    },
-  \ }
+  \ })
 
 " 文章整形プラグイン ビジュアルモードで選択しEnter
 " 複数個ある場合は Enter->* をタイプ
-NeoBundleLazy 'junegunn/vim-easy-align', {
+call dein#add('junegunn/vim-easy-align', {
   \ 'autoload': {
   \   'commands' : ['EasyAlign'],
   \   'mappings' : ['<Plug>(EasyAlign)'],
-  \ }}
+  \ }})
 
-" vimのlua機能が使える時だけ以下のVimプラグインをインストールする
-if has('lua')
-    " コードの自動補完
-    NeoBundle 'Shougo/neocomplete.vim'
-    " スニペットの補完機能
-    NeoBundle "Shougo/neosnippet"
-    " スニペット集
-    NeoBundle 'Shougo/neosnippet-snippets'
+" 補完をしてくれるdeoplete
+call dein#add('Shougo/deoplete.nvim')
+if !has('nvim')
+  call dein#add('roxma/nvim-yarp')
+  call dein#add('roxma/vim-hug-neovim-rpc')
 endif
-
-call neobundle#end()
-
-" ファイルタイプ別のVimプラグイン/インデントを有効にする
-filetype plugin indent on
-
-" 未インストールのVimプラグインがある場合、インストールするかどうかを尋ねてくれるようにする設定
-NeoBundleCheck
+let g:deoplete#enable_at_startup = 1
 
 "----------------------------------------------------------
 " カラースキーム
 "----------------------------------------------------------
-if neobundle#is_installed('molokai')
-    colorscheme molokai " カラースキームにmolokaiを設定する
-endif
-
+" call dein#add('tomasr/molokai', {'merged': 0})
+" call dein#source('molokai')
+colorscheme molokai " カラースキームにmolokaiを設定する
 set t_Co=256 " iTerm2など既に256色環境なら無くても良い
 syntax enable " 構文に色を付ける
 
@@ -117,7 +133,7 @@ set ruler " ステータスラインの右側にカーソルの位置を表示�
 " コマンドモード
 "----------------------------------------------------------
 set wildmenu " コマンドモードの補完
-set history=5000 " 保存するコマンド履歴の数
+set history=10000 " 保存するコマンド履歴の数
 
 "----------------------------------------------------------
 " タブ・インデント
@@ -196,35 +212,6 @@ endif
 " クリップボード共有
 set clipboard&
 set clipboard^=unnamedplus
-
-
-"----------------------------------------------------------
-" neocomplete・neosnippetの設定
-"----------------------------------------------------------
-if neobundle#is_installed('neocomplete.vim')
-    " Vim起動時にneocompleteを有効にする
-    let g:neocomplete#enable_at_startup = 1
-    " smartcase有効化. 大文字が入力されるまで大文字小文字の区別を無視する
-    let g:neocomplete#enable_smart_case = 1
-    " 3文字以上の単語に対して補完を有効にする
-    let g:neocomplete#min_keyword_length = 3
-    " 区切り文字まで補完する
-    let g:neocomplete#enable_auto_delimiter = 1
-    " 1文字目の入力から補完のポップアップを表示
-    let g:neocomplete#auto_completion_start_length = 1
-    " vimprocを使用する
-    let g:neocomplete#use_vimproc = 1
-    let g:neocomplete#sources#buffer#cache_limit_size = 1000000
-    let g:neocomplete#sources#tags#cache_limit_size   = 30000000
-    let g:neocomplete#enable_fuzzy_completion         = 1
-    " バックスペースで補完のポップアップを閉じる
-    inoremap <expr><BS> neocomplete#smart_close_popup()."<C-h>"
-
-    " エンターキーで補完候補の確定. スニペットの展開もエンターキーで確定
-    imap <expr><CR> neosnippet#expandable() ? "<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "<C-y>" : "<CR>"
-    " タブキーで補完候補の選択. スニペット内のジャンプもタブキーでジャンプ
-    imap <expr><TAB> pumvisible() ? "<C-n>" : neosnippet#jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"
-endif
 
 "----------------------------------------------------------
 " Syntastic
