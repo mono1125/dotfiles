@@ -51,6 +51,23 @@ NeoBundle 'goerz/jupytext.vim'
 NeoBundle 'jupyter-vim/jupyter-vim'
 " Directory treeを表示
 NeoBundle 'scrooloose/nerdtree'
+" Vimproc
+NeoBundle 'Shougo/vimproc', {
+  \ 'build' : {
+  \     'windows' : 'make -f make_mingw32.mak',
+  \     'cygwin' : 'make -f make_cygwin.mak',
+  \     'mac' : 'make -f make_mac.mak',
+  \     'unix' : 'make -f make_unix.mak',
+  \    },
+  \ }
+
+" 文章整形プラグイン ビジュアルモードで選択しEnter
+" 複数個ある場合は Enter->* をタイプ
+NeoBundleLazy 'junegunn/vim-easy-align', {
+  \ 'autoload': {
+  \   'commands' : ['EasyAlign'],
+  \   'mappings' : ['<Plug>(EasyAlign)'],
+  \ }}
 
 " vimのlua機能が使える時だけ以下のVimプラグインをインストールする
 if has('lua')
@@ -195,6 +212,11 @@ if neobundle#is_installed('neocomplete.vim')
     let g:neocomplete#enable_auto_delimiter = 1
     " 1文字目の入力から補完のポップアップを表示
     let g:neocomplete#auto_completion_start_length = 1
+    " vimprocを使用する
+    let g:neocomplete#use_vimproc = 1
+    let g:neocomplete#sources#buffer#cache_limit_size = 1000000
+    let g:neocomplete#sources#tags#cache_limit_size   = 30000000
+    let g:neocomplete#enable_fuzzy_completion         = 1
     " バックスペースで補完のポップアップを閉じる
     inoremap <expr><BS> neocomplete#smart_close_popup()."<C-h>"
 
@@ -266,3 +288,11 @@ highlight EndOfBuffer ctermbg=none
 "----------------------------------------------------------
 " Ctrl + nで切り替える
 map <C-n> :NERDTreeToggle<CR>
+
+"----------------------------------------------------------
+" vim-easy-alignの設定
+"----------------------------------------------------------
+" vim-easy-align {{{
+vmap <Enter> <Plug>(EasyAlign)
+nmap <Leader>a <Plug>(EasyAlign)
+" }}}
