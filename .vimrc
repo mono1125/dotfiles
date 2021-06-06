@@ -79,14 +79,14 @@ call dein#add('jupyter-vim/jupyter-vim')
 " Directory treeを表示
 call dein#add('scrooloose/nerdtree')
 " Vimproc
-call dein#add('Shougo/vimproc', {
-  \ 'build' : {
-  \     'windows' : 'make -f make_mingw32.mak',
-  \     'cygwin' : 'make -f make_cygwin.mak',
-  \     'mac' : 'make -f make_mac.mak',
-  \     'unix' : 'make -f make_unix.mak',
-  \    },
-  \ })
+" call dein#add('Shougo/vimproc', {
+"   \ 'build' : {
+"   \     'windows' : 'make -f make_mingw32.mak',
+"   \     'cygwin' : 'make -f make_cygwin.mak',
+"   \     'mac' : 'make -f make_mac.mak',
+"   \     'unix' : 'make -f make_unix.mak',
+"   \    },
+"   \ })
 
 " 文章整形プラグイン ビジュアルモードで選択しEnter
 " 複数個ある場合は Enter->* をタイプ
@@ -117,9 +117,9 @@ let g:deoplete#file#enable_buffer_path = 1
 let g:deoplete#max_list = 10000
 
 " tabキーで選択できるようにする
-inoremap <expr><tab> pumvisible() ? "\<C-n>" :
-        \ neosnippet#expandable_or_jumpable() ?
-        \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+"inoremap <expr><tab> pumvisible() ? "\<C-n>" :
+"        \ neosnippet#expandable_or_jumpable() ?
+"        \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
 
 " neosnippet
 call dein#add('Shougo/neosnippet.vim')
