@@ -78,6 +78,14 @@ call dein#add('goerz/jupytext.vim')
 call dein#add('jupyter-vim/jupyter-vim')
 " Directory treeを表示
 call dein#add('scrooloose/nerdtree')
+
+" 辞書
+"" 範囲選択後 :Translate で翻訳
+"" :terminalでターミナル起動後
+"" C-w Nでノーマルモード
+"" ノーマルモードでiを押すとジョブモードに移行
+call dein#add('skanehira/translate.vim')
+
 " Vimproc
 " call dein#add('Shougo/vimproc', {
 "   \ 'build' : {
