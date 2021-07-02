@@ -85,6 +85,10 @@ call dein#add('scrooloose/nerdtree')
 "" C-w Nでノーマルモード
 "" ノーマルモードでiを押すとジョブモードに移行
 call dein#add('skanehira/translate.vim')
+" ポップアップ窓を使うなら値を1にする（デフォルト1)
+"let g:translate_popup_window = 0
+" ポップアップ窓を使わない場合でのバッファ窓の高さを設定
+"let g:translate_winsize = 10
 
 " Vimproc
 " call dein#add('Shougo/vimproc', {
