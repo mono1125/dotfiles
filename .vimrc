@@ -108,6 +108,12 @@ call dein#add('junegunn/vim-easy-align', {
   \   'mappings' : ['<Plug>(EasyAlign)'],
   \ }})
 
+" Rust
+call dein#add('rust-lang/rust.vim')
+"" 保存時に自動でrustfmt(整形)
+let g:rustfmt_autosave = 1
+"" Testがある場所で:RustTestと入力するとテストを実行し結果を見れる
+
 "----------------------------------------------------------
 " 補完用設定
 "----------------------------------------------------------
