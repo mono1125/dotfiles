@@ -78,6 +78,9 @@ call dein#add('goerz/jupytext.vim')
 call dein#add('jupyter-vim/jupyter-vim')
 " Directory treeを表示
 call dein#add('scrooloose/nerdtree')
+" 括弧をレインボー表示
+call dein#add('luochen1990/rainbow')
+let g:rainbow_active = 1
 
 " 辞書
 "" 範囲選択後 :Translate で翻訳
