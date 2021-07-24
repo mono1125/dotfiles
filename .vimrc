@@ -89,9 +89,9 @@ let g:rainbow_active = 1
 "" ノーマルモードでiを押すとジョブモードに移行
 call dein#add('skanehira/translate.vim')
 " ポップアップ窓を使うなら値を1にする（デフォルト1)
-"let g:translate_popup_window = 0
+let g:translate_popup_window = 0
 " ポップアップ窓を使わない場合でのバッファ窓の高さを設定
-"let g:translate_winsize = 10
+let g:translate_winsize = 20
 
 " Vimproc
 " call dein#add('Shougo/vimproc', {
@@ -116,6 +116,12 @@ call dein#add('rust-lang/rust.vim')
 "" 保存時に自動でrustfmt(整形)
 let g:rustfmt_autosave = 1
 "" Testがある場所で:RustTestと入力するとテストを実行し結果を見れる
+
+" Windowsサイズを高速に変更できるようにする
+"" Ctrl+Eでリサイズモードに入り,h,j,k,lでそれぞれリサイズしEnterで確定
+""に qを押せば変更はキャンセルされる
+call dein#add('simeji/winresizer')
+
 
 "----------------------------------------------------------
 " 補完用設定
