@@ -62,6 +62,8 @@ call dein#add('Yggdroot/indentLine')
 call dein#add('bronson/vim-trailing-whitespace')
 " 構文エラーチェック
 call dein#add('scrooloose/syntastic')
+" vimproc
+call dein#add('Shougo/vimproc.vim', {'build': 'make'})
 " 多機能セレクタ
 call dein#add('ctrlpvim/ctrlp.vim')
 " CtrlPの拡張プラグイン. 関数検索
@@ -91,7 +93,7 @@ call dein#add('skanehira/translate.vim')
 " ポップアップ窓を使うなら値を1にする（デフォルト1)
 let g:translate_popup_window = 0
 " ポップアップ窓を使わない場合でのバッファ窓の高さを設定
-let g:translate_winsize = 20
+let g:translate_winsize = 10
 
 " Vimproc
 " call dein#add('Shougo/vimproc', {
@@ -429,3 +431,24 @@ map <C-n> :NERDTreeToggle<CR>
 vmap <Enter> <Plug>(EasyAlign)
 nmap <Leader>a <Plug>(EasyAlign)
 " }}}
+
+"----------------------------------------------------------
+" google suggestによる補完の設定
+" 要curl, <c-x><c-u>でサジェスト
+"----------------------------------------------------------
+set completefunc=GoogleComplete
+function! GoogleComplete(findstart, base)
+    if a:findstart
+        let line = getline('.')
+        let start = col('.') - 1
+        while start > 0 && line[start - 1] =~ '\S'
+            let start -= 1
+        endwhile
+        return start
+    else
+        let ret = system('curl -s -G --data-urlencode "q='
+                    \ . a:base . '" "http://suggestqueries.google.com/complete/search?&client=firefox&hl=ja&ie=utf8&oe=utf8"')
+        let res = split(substitute(ret,'\[\|\]\|"',"","g"),",")
+        return res
+    endif
+endfunction

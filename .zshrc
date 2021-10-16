@@ -1,5 +1,45 @@
 # ~/.zshrc file for zsh interactive shells.
-# see /usr/share/doc/zsh/examples/zshrc for examples
+
+### Added by Zinit's installer
+if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓ ▒ ░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})… %f"
+    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
+    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+    ¦   print -P "%F{33}▓ ▒ ░ %F{34}Installation successful.%f%b" || \
+    ¦   print -P "%F{160}▓ ▒ ░ The clone has failed.%f%b"
+fi
+
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zinit-zsh/z-a-rust \
+    zinit-zsh/z-a-as-monitor \
+    zinit-zsh/z-a-patch-dl \
+    zinit-zsh/z-a-bin-gem-node \
+    zsh-users/zsh-syntax-highlighting \
+    zsh-users/zsh-autosuggestions \
+    zsh-users/zsh-completions \
+    zdharma/history-search-multi-word
+### End of Zinit's installer chunk
+
+### Zinit Memo ###
+# zinit self-update : zinitのupdate
+# zinit update : snippet, plugin, completionのupdate
+# zinit cclear : 使われていない補完設定の掃除
+# zinit delete <name> : snippet, plugin, completionの削除
+# zinit times : snippet, plugin, completionごとの速度計測
+### End of Zinit Memo ###
+
+### Oh-my-zsh setup ###
+# OMZL: Library, OMZP: Plugin
+zinit snippet OMZL::git.zsh
+zinit snippet OMZP::git
+zinit cdclear -q
+### End of Oh-my-zsh setup ###
 
 setopt autocd              # change directory just by typing its name
 setopt correct            # auto correct mistakes
@@ -12,7 +52,7 @@ setopt promptsubst         # enable command substitution in prompt
 setopt print_eight_bit # 日本語ファイル名を表示可能にする
 setopt auto_param_keys # 括弧の対応などを自動補完
 setopt list_packed # 補完候補をできるだけ詰めて表示
-
+autoload -Uz colors && colors
 WORDCHARS=${WORDCHARS//\/} # Don't consider certain characters part of the word
 
 # hide EOL sign ('%')
@@ -63,6 +103,42 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
+#### GIT ###
+function git-prompt {
+  local branchname branch st remote pushed upstream
+  branch='\ue0a0'
+  branchname=`git symbolic-ref --short HEAD 2> /dev/null`
+  if [ -z $branchname ]; then
+    return
+  fi
+  st=`git status 2> /dev/null`
+  if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
+    # 全て commit されてクリーンな状態
+    branch="%{${fg[green]}%}($branch$branchname)%{$reset_color%}"
+  elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
+    # 追加されていないファイルがある場合
+    branch="%{${fg[yellow]}%}($branch$branchname)%{$reset_color%}"
+  else
+    branch="%{${fg[red]}%}($branch$branchname)%{$reset_color%}"
+  fi
+
+  remote=`git config branch.${branchname}.remote 2> /dev/null`
+
+  if [ -z $remote ]; then
+    pushed=''
+  else
+    upstream="${remote}/${branchname}"
+    if [[ -z `git log ${upstream}..${branchname}` ]]; then
+        pushed="%{${fg[green]}%}[up]%{$reset_color%}"
+    else
+        pushed="%{${fg[red]}%}[up]%{$reset_color%}"
+    fi
+  fi
+
+  echo "$branch$pushed"
+}
+#### GIT ###
+
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
@@ -81,11 +157,9 @@ fi
 
 if [ "$color_prompt" = yes ]; then
     PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)──}(%B%F{%(#.red.blue)}%n%(#.💀.㉿)%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-    RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
-
-    # enable syntax-highlighting
-    if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && [ "$color_prompt" = yes ]; then
-	. /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    # RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
+    RPROMPT='`git-prompt`'
+    # syntax-highlighting settings
 	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 	ZSH_HIGHLIGHT_STYLES[default]=none
 	ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
@@ -128,7 +202,6 @@ if [ "$color_prompt" = yes ]; then
 	ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
 	ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
 	ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
-    fi
 else
     PROMPT='${debian_chroot:+($debian_chroot)}%n@%m:%~%# '
 fi
@@ -157,6 +230,9 @@ precmd() {
 	fi
     fi
 }
+
+# change suggestion color
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
 # enable color support of ls, less and man, and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -202,11 +278,5 @@ alias tree="pwd;find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*
 # nvidia-smi realtime
 #alias nvidia-smi-r='watch -n1 "nvidia-smi"'
 #alias nvidia-smi-gpuinfo='watch -d -n 2 nvidia-smi -i 1 -q -d CLOCK,POWER'
-
-# enable auto-suggestions based on the history
-if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    # change suggestion color
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
-fi
+alias discord='$HOME/Discord/Discord'
 
