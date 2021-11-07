@@ -103,6 +103,11 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
+# neovim color
+## .vimrcで set termguicolors 指定。
+## vimでTrueColorを使用するために必要
+COLORTERM='truecolor'
+
 #### GIT ###
 function git-prompt {
   local branchname branch st remote pushed upstream
@@ -278,5 +283,7 @@ alias tree="pwd;find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*
 # nvidia-smi realtime
 #alias nvidia-smi-r='watch -n1 "nvidia-smi"'
 #alias nvidia-smi-gpuinfo='watch -d -n 2 nvidia-smi -i 1 -q -d CLOCK,POWER'
-alias discord='$HOME/Discord/Discord'
+alias discord="$HOME/Discord/Discord"
 
+# neovim
+export XDG_CONFIG_HOME="$HOME/.config"
