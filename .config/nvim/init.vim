@@ -86,6 +86,8 @@ call dein#add('scrooloose/nerdtree')
 " 括弧をレインボー表示
 call dein#add('luochen1990/rainbow')
 let g:rainbow_active = 1
+"syntax hilight
+call dein#add('nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'})
 
 " 辞書
 "" 範囲選択後 :Translate で翻訳
@@ -383,6 +385,19 @@ endif
 " クリップボード共有
 set clipboard&
 set clipboard^=unnamedplus
+
+"----------------------------------------------------------
+" nvim-treesitter
+"----------------------------------------------------------
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = {},  -- list of language that will be disabled
+  },
+}
+EOF
 
 "----------------------------------------------------------
 " ale
