@@ -268,6 +268,7 @@ call dein#source('molokai')
 colorscheme molokai " カラースキームにmolokaiを設定する
 set t_Co=256 " iTerm2など既に256色環境なら無くても良い
 syntax enable " 構文に色を付ける
+set pumblend=10 " 透過率の設定
 set termguicolors
 
 "----------------------------------------------------------
@@ -405,11 +406,13 @@ highlight link ALEWarningSign StorageClass
 " Ctrl + kで次の指摘へ、Ctrl + jで前の指摘へ移動
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
 let g:ale_fixers = {
   \   '*': ['remove_trailing_lines', 'trim_whitespace'],
   \   'python': ['flake8'],
   \ }
+
 "----------------------------------------------------------
 " vim-autopep8の設定
 "----------------------------------------------------------
@@ -468,11 +471,20 @@ let g:jupytext_filetype_map = {'py': 'python'}
 "----------------------------------------------------------
 " 透過用の設定
 "----------------------------------------------------------
-highlight Normal ctermbg=none
-highlight NonText ctermbg=none
-highlight LineNr ctermbg=none
-highlight Folded ctermbg=none
-highlight EndOfBuffer ctermbg=none
+highlight Normal ctermbg=none guibg=none
+highlight NonText ctermbg=none guibg=none
+highlight LineNr ctermbg=none guibg=none
+highlight Folded ctermbg=none guibg=none
+highlight EndOfBuffer ctermbg=none guibg=none
+
+" augroup TransparentBG
+"   	autocmd!
+" 	autocmd Colorscheme * highlight Normal ctermbg=none
+" 	autocmd Colorscheme * highlight NonText ctermbg=none
+" 	autocmd Colorscheme * highlight LineNr ctermbg=none
+" 	autocmd Colorscheme * highlight Folded ctermbg=none
+" 	autocmd Colorscheme * highlight EndOfBuffer ctermbg=none
+" augroup END
 
 "----------------------------------------------------------
 " NERD Treeの表示非表示を切り替える
