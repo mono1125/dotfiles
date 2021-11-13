@@ -299,6 +299,8 @@ export XDG_CONFIG_HOME="$HOME/.config"
 # $ ~/.fzf/install
 # = Using package manager = #
 # $ sudo apt update && sudo apt install fzf
+# $ sudo apt install bat <- batcatになる可能性がある(名前衝突回避のため)
+# --> $ mkdir -p ~/.local/bin && ln -s /usr/bin/batcat ~/.local/bin/bat
 # = Upgrading fzf = #
 # git: $ cd ~/.fzf && git pull && /.install
 # -------------------- End of Install -------------------- #
