@@ -100,16 +100,6 @@ let g:translate_popup_window = 0
 " ポップアップ窓を使わない場合でのバッファ窓の高さを設定
 let g:translate_winsize = 10
 
-" Vimproc
-" call dein#add('Shougo/vimproc', {
-"   \ 'build' : {
-"   \     'windows' : 'make -f make_mingw32.mak',
-"   \     'cygwin' : 'make -f make_cygwin.mak',
-"   \     'mac' : 'make -f make_mac.mak',
-"   \     'unix' : 'make -f make_unix.mak',
-"   \    },
-"   \ })
-
 " 文章整形プラグイン ビジュアルモードで選択しEnter
 " 複数個ある場合は Enter->* をタイプ
 call dein#add('junegunn/vim-easy-align', {
@@ -282,6 +272,22 @@ set ambiwidth=double " □や○文字が崩れる問題を解決
 "   set ambiwidth=single
 " endif
 "
+
+"----------------------------------------------------------
+" バッファ
+"----------------------------------------------------------
+" :bd でバッファ閉じる -> :bd [バッファ番号]も可
+" :%bd で全てのバッファを閉じる
+" :sp or <C-w>s 今開いているバッファを水平分割して表示
+" :vs or <C-w>v 今開いているバッファを垂直分割して表示
+" :ls でバッファを確認して :b [バッファ番号]で現在のウィンドウに表示
+" :ls h+ 未保存の非表示バッファのみ表示する
+" :sb [バッファ番号]でウィンドウを分割してバッファを表示させる
+
+" カーソルキーでBuffer移動
+nnoremap <Left> :bp<CR>
+nnoremap <Right> :bn<CR>
+
 "----------------------------------------------------------
 " ステータスライン
 "----------------------------------------------------------
@@ -520,3 +526,22 @@ function! GoogleComplete(findstart, base)
         return res
     endif
 endfunction
+
+"----------------------------------------------------------
+" fzf-vimの設定
+"----------------------------------------------------------
+" fzf
+" 要fzfインストール
+call dein#add('junegunn/fzf', {'build': './install --all'})
+call dein#add('junegunn/fzf.vim')
+
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+let mapleader="\<Space>"
+nnoremap <silent> <Leader>,p :GFiles<CR>
+nnoremap <silent> <Leader>p :Files<CR>
+nnoremap <silent> <Leader>,s :RG<CR>
+nnoremap <silent> <Leader>,c :Commits<CR>
