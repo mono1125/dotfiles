@@ -346,7 +346,7 @@ fkill() {
 }
 
 # ------------------------------------------------------------------- #
-# directory
+# directory ( https://github.com/atweiden/fzf-extras )
 
 # cdコマンドをまとめたもの
 ## zd -d カレントディレクトリを再帰的に検索
