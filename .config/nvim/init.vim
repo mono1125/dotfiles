@@ -195,6 +195,13 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+" Use <c-@> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-@> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
 " inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
@@ -211,15 +218,36 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
 " Highlight the symbol and its references when holding the cursor.
 " autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of language server.
 nmap <silent> <C-s> <Plug>(coc-range-select)
 xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocActionAsync('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -402,8 +430,11 @@ EOF
 " 保存時のみ実行する
 let g:ale_lint_on_text_changed = 0
 " 表示に関する設定
-let g:ale_sign_error = ''
-let g:ale_sign_warning = ''
+let g:ale_sign_column_always = 1
+"let g:ale_sign_error = ''
+"let g:ale_sign_warning = ''
+let g:ale_sign_error = '!!'
+let g:ale_sign_warning = '=='
 let g:airline#extensions#ale#open_lnum_symbol = '('
 let g:airline#extensions#ale#close_lnum_symbol = ')'
 let g:ale_echo_msg_format = '[%linter%]%code: %%s'
