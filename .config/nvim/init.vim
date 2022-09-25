@@ -118,6 +118,8 @@ let g:rustfmt_autosave = 1
 ""に qを押せば変更はキャンセルされる
 call dein#add('simeji/winresizer')
 
+" git 変更箇所のマーキング
+call dein#add('airblade/vim-gitgutter')
 
 "----------------------------------------------------------
 " 補完用設定
@@ -649,3 +651,9 @@ nnoremap <silent> <Leader>,p :GFiles<CR>
 nnoremap <silent> <Leader>p :Files<CR>
 nnoremap <silent> <Leader>,s :RG<CR>
 nnoremap <silent> <Leader>,c :Commits<CR>
+"
+"----------------------------------------------------------
+" vim-gitgutterの設定
+"----------------------------------------------------------
+nmap <silent> <C-g><C-n> <Plug>GitGutterNextHunk
+nmap <silent> <C-g><C-p> <Plug>GitGutterPrevHunk
