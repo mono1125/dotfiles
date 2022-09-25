@@ -85,6 +85,8 @@ call dein#add('ryanoasis/vim-devicons')
 " 括弧をレインボー表示
 call dein#add('luochen1990/rainbow')
 let g:rainbow_active = 1
+" 括弧を自動補完
+call dein#add('jiangmiao/auto-pairs')
 "syntax hilight
 call dein#add('nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'})
 
