@@ -3,9 +3,9 @@
 repo = 'Shougo/dein.vim'
 
 # ブランチやタグを指定したいとき
-[[plugins]]
-repo = 'delphinus35/typescript-vim'
-rev  = 'colorize-template-strings'
+# [[plugins]]
+# repo = 'delphinus35/typescript-vim'
+# rev  = 'colorize-template-strings'
 
 # 特定の条件で読み込みたいとき
 #[[plugins]]
@@ -35,6 +35,7 @@ hook_add = '''
     let g:airline#extensions#ale#warning_symbol = ' '
     let g:airline#extensions#default#section_truncate_width = {}
     let g:airline#extensions#whitespace#enabled = 1
+    "let g:airline#extensions#vista#enabled = 0
 
     " unicode symbols
     if !exists('g:airline_symbols')

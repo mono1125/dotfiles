@@ -484,6 +484,8 @@ EOF
 "----------------------------------------------------------
 " ale
 "----------------------------------------------------------
+" LSP無効
+let g:ale_disable_lsp = 1
 " 保存時のみ実行する
 let g:ale_lint_on_text_changed = 0
 " 表示に関する設定
@@ -502,9 +504,22 @@ nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
+let js_fixers = ['prettier', 'eslint']
+let g:ale_linters = {
+  \   'javascript': ['eslint'],
+  \   'javascript.jsx': ['eslint'],
+  \   'typescript': ['eslint'],
+  \   'typescriptreact': ['eslint'],
+  \ }
 let g:ale_fixers = {
   \   '*': ['remove_trailing_lines', 'trim_whitespace'],
   \   'python': ['flake8'],
+  \   'javascript': js_fixers,
+  \   'javascript.jsx': js_fixers,
+  \   'typescript': js_fixers,
+  \   'typescriptreact': js_fixers,
+  \   'css': ['prettier'],
+  \   'json': ['prettier'],
   \ }
 
 "----------------------------------------------------------

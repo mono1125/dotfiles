@@ -1,7 +1,7 @@
 # 特定のファイルタイプで読み込む
-[[plugins]]
-repo  = 'Quramy/tsuquyomi'
-on_ft = ['typescript']
+# [[plugins]]
+# repo  = 'Quramy/tsuquyomi'
+# on_ft = ['typescript']
 
 # [[plugins]]
 # repo   = 'Shougo/unite.vim'

@@ -16,6 +16,7 @@
       "ignoredRootPaths": ["~"]
     }
   },
-  "python.jediEnabled": false
+  "python.jediEnabled": false,
+  "eslint.autoFixOnSave": true,
+  "diagnostic.displayByAle": true
 }
-
