@@ -1,5 +1,3 @@
-# ~/.zshrc file for zsh interactive shells.
-
 ### Added by Zinit's installer (zdharma-continuum)
 if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
     print -P "%F{33}▓ ▒ ░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})… %f"
@@ -23,42 +21,9 @@ zinit light-mode for \
     zsh-users/zsh-syntax-highlighting \
     zsh-users/zsh-autosuggestions \
     zsh-users/zsh-completions \
-    zdharma-continuum/history-search-multi-word
+    zdharma-continuum/history-search-multi-word \
+    romkatv/powerlevel10k
 ### End of Zinit's installer chunk
-
-# ### Added by Zinit's installer
-# if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
-#     print -P "%F{33}▓ ▒ ░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})… %f"
-#     command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
-#     command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
-#        print -P "%F{33}▓ ▒ ░ %F{34}Installation successful.%f%b" || \
-#        print -P "%F{160}▓ ▒ ░ The clone has failed.%f%b"
-# fi
-
-# source "$HOME/.zinit/bin/zinit.zsh"
-# autoload -Uz _zinit
-# (( ${+_comps} )) && _comps[zinit]=_zinit
-
-# # Load a few important annexes, without Turbo
-# # (this is currently required for annexes)
-# zinit light-mode for \
-#     zinit-zsh/z-a-rust \
-#     zinit-zsh/z-a-as-monitor \
-#     zinit-zsh/z-a-patch-dl \
-#     zinit-zsh/z-a-bin-gem-node \
-#     zsh-users/zsh-syntax-highlighting \
-#     zsh-users/zsh-autosuggestions \
-#     zsh-users/zsh-completions \
-#     zdharma/history-search-multi-word
-# ### End of Zinit's installer chunk
-
-### Zinit Memo ###
-# zinit self-update : zinitのupdate
-# zinit update : snippet, plugin, completionのupdate
-# zinit cclear : 使われていない補完設定の掃除
-# zinit delete <name> : snippet, plugin, completionの削除
-# zinit times : snippet, plugin, completionごとの速度計測
-### End of Zinit Memo ###
 
 ### Oh-my-zsh setup ###
 # OMZL: Library, OMZP: Plugin
@@ -116,14 +81,6 @@ setopt share_history         # share command history data
 # force zsh to show the complete history
 alias history="history 0"
 
-# make less more friendly for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -134,161 +91,11 @@ esac
 ## vimでTrueColorを使用するために必要
 COLORTERM='truecolor'
 
-#### GIT ###
-function git-prompt {
-  local branchname branch st remote pushed upstream
-  branch='\ue0a0'
-  branchname=`git symbolic-ref --short HEAD 2> /dev/null`
-  if [ -z $branchname ]; then
-    return
-  fi
-  st=`git status 2> /dev/null`
-  if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
-    # 全て commit されてクリーンな状態
-    branch="%{${fg[green]}%}($branch$branchname)%{$reset_color%}"
-  elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
-    # 追加されていないファイルがある場合
-    branch="%{${fg[yellow]}%}($branch$branchname)%{$reset_color%}"
-  else
-    branch="%{${fg[red]}%}($branch$branchname)%{$reset_color%}"
-  fi
-
-  remote=`git config branch.${branchname}.remote 2> /dev/null`
-
-  if [ -z $remote ]; then
-    pushed=''
-  else
-    upstream="${remote}/${branchname}"
-    if [[ -z `git log ${upstream}..${branchname}` ]]; then
-        pushed="%{${fg[green]}%}[up]%{$reset_color%}"
-    else
-        pushed="%{${fg[red]}%}[up]%{$reset_color%}"
-    fi
-  fi
-
-  echo "$branch$pushed"
-}
-#### GIT ###
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)──}(%B%F{%(#.red.blue)}%n%(#.💀.㉿)%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-    # RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
-    RPROMPT='`git-prompt`'
-    # syntax-highlighting settings
-	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-	ZSH_HIGHLIGHT_STYLES[default]=none
-	ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
-	ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=cyan,bold
-	ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[global-alias]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[path]=underline
-	ZSH_HIGHLIGHT_STYLES[path_pathseparator]=
-	ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=
-	ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[command-substitution]=none
-	ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[process-substitution]=none
-	ZSH_HIGHLIGHT_STYLES[process-substitution-delimiter]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
-	ZSH_HIGHLIGHT_STYLES[back-quoted-argument-delimiter]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[rc-quote]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[assign]=none
-	ZSH_HIGHLIGHT_STYLES[redirection]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[comment]=fg=black,bold
-	ZSH_HIGHLIGHT_STYLES[named-fd]=none
-	ZSH_HIGHLIGHT_STYLES[numeric-fd]=none
-	ZSH_HIGHLIGHT_STYLES[arg0]=fg=green
-	ZSH_HIGHLIGHT_STYLES[bracket-error]=fg=red,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-1]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-2]=fg=green,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-3]=fg=magenta,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
-	ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
-else
-    PROMPT='${debian_chroot:+($debian_chroot)}%n@%m:%~%# '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    TERM_TITLE=$'\e]0;${debian_chroot:+($debian_chroot)}%n@%m: %~\a'
-    ;;
-*)
-    ;;
-esac
-
-new_line_before_prompt=yes
-precmd() {
-    # Print the previously configured title
-    print -Pnr -- "$TERM_TITLE"
-
-    # Print a new line before the prompt, but only if it is not the first line
-    if [ "$new_line_before_prompt" = yes ]; then
-	if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
-	    _NEW_LINE_BEFORE_PROMPT=1
-	else
-	    print ""
-	fi
-    fi
-}
-
-# change suggestion color
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
-
-# enable color support of ls, less and man, and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-    alias diff='diff --color=auto'
-    alias ip='ip --color=auto'
-
-    export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
-    export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
-    export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
-    export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
-    export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
-    export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
-    export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
-
-    # Take advantage of $LS_COLORS for completion as well
-    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-fi
+# GNU Command
+alias ls="gls --color=auto"
+alias grep="ggrep --color=auto"
+alias tar="gtar"
+alias diff="diff --color=auto"
 
 # some more ls aliases
 alias ll='ls -l'
@@ -300,20 +107,15 @@ alias mv='mv -i'
 alias rm='rm -i'
 
 # クリップボード 要xsel
-alias pbcopy='xsel --clipboard --input'
-alias pbpaste='xsel --clipboard --output'
+# alias pbcopy='xsel --clipboard --input'
+# alias pbpaste='xsel --clipboard --output'
 # カレントディレクトリのパスをクリップボードにコピー
-alias pwdc='pwd | tr -d "\n" | pbcopy'
+# alias pwdc='pwd | tr -d "\n" | pbcopy'
 # treeコマンド代用
 alias tree="pwd;find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*/| /g'"
-# nvidia-smi realtime
-#alias nvidia-smi-r='watch -n1 "nvidia-smi"'
-#alias nvidia-smi-gpuinfo='watch -d -n 2 nvidia-smi -i 1 -q -d CLOCK,POWER'
-alias discord="$HOME/Discord/Discord"
 
-alias nvim="/usr/local/bin/nvim-nightly"
-alias vi='nvim'
-alias vim='nvim'
+# alias vi='nvim'
+# alias vim='nvim'
 # neovim
 export XDG_CONFIG_HOME="$HOME/.config"
 
@@ -579,5 +381,16 @@ EOF
 # =============================== End of fzf =============================== #
 
 # Node.js version manager
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# GNU Command Paths
+PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+PATH="/opt/homebrew/opt/difftils/bin:$PATH"
+PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
+PATH="/opt/homebrew/opt/grep/libexec/gnubin:$PATH"
+PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+export PATH="/opt/homebrew/opt/gnu-getopt/bin:$PATH"
