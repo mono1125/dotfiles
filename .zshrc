@@ -422,3 +422,5 @@ unset __conda_setup
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# 1password shell completion
+eval "$(op completion zsh)"; compdef _op op
