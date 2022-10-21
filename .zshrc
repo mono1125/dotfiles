@@ -123,7 +123,7 @@ alias rm='rm -i'
 alias tree="pwd;find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*/| /g'"
 
 # alias vi='nvim'
-# alias vim='nvim'
+alias vim='nvim'
 # neovim
 export XDG_CONFIG_HOME="$HOME/.config"
 
@@ -421,3 +421,4 @@ unset __conda_setup
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
