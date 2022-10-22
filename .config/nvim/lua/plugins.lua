@@ -49,4 +49,5 @@ packer.startup(function(use)
   use 'dinhhuy258/git.nvim' -- For git blame & browse
   use 'tpope/vim-commentary' -- gccでコメントアウト
   use 'Yggdroot/indentLine' -- インデントラインの可視化
+  use 'ntpeters/vim-better-whitespace' -- white-space
 end)
